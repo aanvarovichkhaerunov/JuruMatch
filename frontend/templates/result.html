@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Hasil Rekomendasi{% endblock %}
+{% block content %}
+<h1>Hasil Tes — {{ nama }}</h1>
+<div class="result-summary">
+  <p class="result-lead">Kode Holland dominan Anda: <strong class="kode-holland">{{ kode_holland }}</strong></p>
+  <p>Persentase kecocokan menunjukkan kedekatan profil skor RIASEC Anda dengan profil target setiap jurusan. Semakin tinggi nilainya, semakin dekat profilnya.</p>
+</div>
+
+<h2>Skor RIASEC</h2>
+<div class="riasec-bars">
+  {% for kode in urutan_dimensi %}
+  {% set info = dimensi_info[kode] %}
+  <div class="bar-row">
+    <span class="bar-label"><span class="bar-icon">{{ info.icon }}</span>{{ kode }} — {{ info.nama }} ({{ info.label }})</span>
+    <div class="bar-track">
+      <div class="bar-fill bar-{{ info.kelas }}" style="width: {{ skor_riasec[kode] }}%;">{{ skor_riasec[kode] }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="reading-guide">
+  <strong>Kategori kecocokan:</strong>
+  <span class="fit-pill fit-very">Sangat Cocok ≥ 85%</span>
+  <span class="fit-pill fit-good">Cocok 70–84%</span>
+  <span class="fit-pill fit-mid">Cukup Cocok 55–69%</span>
+  <span class="fit-pill fit-low">Tidak Cocok 40–54%</span>
+  <span class="fit-pill fit-very-low">Sangat Tidak Cocok &lt; 40%</span>
+  <br><br>
+  Kategori lima tingkat di atas merupakan <strong>interpretasi tampilan</strong> dari persentase kecocokan, bukan lima himpunan fuzzy baru. Proposal saat ini mendefinisikan tiga himpunan output fuzzy: Kurang Cocok, Cukup Cocok, dan Sangat Cocok. Nilai centroid Mamdani tetap dihitung di backend untuk kebutuhan audit metode.
+</div>
+
+<h2>Rekomendasi Jurusan — 5 Teratas</h2>
+<div class="rekom-list">
+  {% for r in rekomendasi %}
+  <div class="rekom-card">
+    <div class="rekom-rank">#{{ loop.index }}</div>
+    <div class="rekom-info">
+      <h3>{{ r.nama }}</h3>
+      <p class="rumpun-tag">{{ r.rumpun }}</p>
+      <span class="fit-pill">{{ r.kategori_kecocokan }}</span>
+    </div>
+    <div class="rekom-skor">{{ r.skor_kecocokan }}%</div>
+  </div>
+  {% endfor %}
+</div>
+
+<a class="btn btn-secondary" href="{{ url_for('tes') }}">Ulangi Tes</a>
+{% endblock %}
