@@ -41,8 +41,8 @@ Tanpa `DATABASE_URL`, database lokal akan dibuat sebagai `backend/sirekomjur.db`
 
 Jika `ADMIN_EMAIL` dan `ADMIN_PASSWORD` tidak diset, default development adalah:
 
-- Email: `admin@jurumatch.local`
-- Password: `admin12345`
+- Email: `[configure for local development]`
+- Password: `[configure for local development]`
 
 Untuk deployment publik, **wajib** mengatur keduanya di Render Environment Variables.
 
@@ -64,3 +64,9 @@ jurumatch/
 ├── render.yaml
 └── README.md
 ```
+
+## Public Repository Safety
+
+The SQLite database containing runtime/user data is intentionally excluded from this repository.
+For local development, configure administrator credentials through the application's supported
+configuration rather than committing real credentials or user data.

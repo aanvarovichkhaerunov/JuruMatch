@@ -165,15 +165,49 @@ def admin_login():
 @app.route("/admin/dashboard")
 @admin_required
 def admin_dashboard():
-    return render_template("admin_dashboard.html",users=database.semua_pengguna(),
-        results=database.semua_hasil(),user_count=database.count_users(),result_count=database.count_results())
+    return render_template(
+        "admin_dashboard.html",
+        users=database.semua_pengguna(),
+        results=database.semua_hasil(),
+        user_count=database.count_users(),
+        result_count=database.count_results()
+    )
+
+
+@app.route("/admin/hasil/<int:hasil_id>")
+@admin_required
+def admin_detail_hasil(hasil_id):
+    d = database.ambil_hasil(hasil_id, admin=True)
+
+    if d is None:
+        flash("Hasil tes tidak ditemukan.")
+        return redirect(url_for("admin_dashboard"))
+
+    skor = {
+        "R": d["skor_r"],
+        "I": d["skor_i"],
+        "A": d["skor_a"],
+        "S": d["skor_s"],
+        "E": d["skor_e"],
+        "C": d["skor_c"]
+    }
+
+    return render_template(
+    "admin_hasil_detail.html",
+    hasil=d,
+    skor_riasec=skor,
+    rekomendasi=d["rekomendasi"]
+)
 
 @app.route("/tes")
 @login_required
 def tes():
-    return render_template("test.html",kelompok_pertanyaan=_kelompokkan_pertanyaan(),
-        total_pertanyaan=len(DAFTAR_PERTANYAAN),nama_pengguna=current_user()["nama"])
-
+    return render_template(
+        "test.html",
+        kelompok_pertanyaan=_kelompokkan_pertanyaan(),
+        total_pertanyaan=len(DAFTAR_PERTANYAAN),
+        nama_pengguna=current_user()["nama"]
+    )
 @app.route("/proses",methods=["POST"])
 @login_required
 def proses():
